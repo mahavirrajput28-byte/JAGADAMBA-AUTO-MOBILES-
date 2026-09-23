@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2W Parts AI - All Companies</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#07101f;color:#f5f7fb;font-family:Arial,sans-serif}
+.app{max-width:820px;margin:auto;padding:18px}.head{padding:20px 4px}.logo{font-size:14px;color:#67a7ff;font-weight:700;letter-spacing:1px}
+h1{margin:7px 0;font-size:32px}.sub{color:#9eabc2;line-height:1.5}.card{background:#101a2d;border:1px solid #263653;border-radius:20px;padding:18px;margin-top:14px}
+.search{display:flex;gap:10px}.search input{min-width:0;flex:1;background:#081222;color:#fff;border:1px solid #31415f;border-radius:13px;padding:16px;font-size:18px;text-transform:uppercase}.search button{border:0;background:#287cf4;color:white;border-radius:13px;padding:0 20px;font-size:16px;font-weight:700}
+.examples{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.chip{border:1px solid #30415f;color:#b9c7df;padding:7px 10px;border-radius:20px;cursor:pointer;font-size:13px}
+#out{margin-top:15px}.result{background:#0a1425;border-radius:15px;padding:16px;border:1px solid #263653}.title{font-size:21px;font-weight:700}.muted{color:#9ba9c2}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.item{background:#111d32;padding:12px;border-radius:11px}.lab{font-size:12px;color:#8494b2}.val{margin-top:4px;font-weight:700}.warn{margin-top:14px;color:#ffd37a;font-size:13px;line-height:1.45}.source{margin-top:14px;color:#7e91b2;font-size:12px}
+@media(max-width:560px){.search{flex-direction:column}.search button{height:52px}.grid{grid-template-columns:1fr}h1{font-size:28px}}
+
+<style>
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.toolbtn{background:#17243b;border:1px solid #30415f;color:#dbe7ff;border-radius:10px;padding:10px 12px;cursor:pointer}
+.toolbtn input{display:none}
+.brandbar{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.brand{background:#0b1628;border:1px solid #2c3c5a;color:#aebddb;border-radius:18px;padding:7px 11px;cursor:pointer}
+.count{color:#7f91b0;font-size:12px;margin-top:8px}
+
+.fitmentTitle{font-weight:800;margin:16px 0 8px}.fitments{display:flex;flex-wrap:wrap;gap:8px}.fitpill{display:inline-block;padding:8px 11px;border-radius:999px;background:#eef4ff;border:1px solid #c9d8ff;color:#163b78;font-size:13px}.photoBox{margin-top:16px;padding:12px;border:1px solid #ddd;border-radius:14px;background:#fafafa}.photoTitle{font-weight:800;margin-bottom:10px}.photoBox img{display:block;width:100%;max-height:280px;object-fit:contain;border-radius:10px;background:#fff}.photoFallback{padding:18px;text-align:center;color:#666;font-size:13px}
+</style>
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="head">
+    <div class="logo">🏍️ 2W PARTS AI — 7 COMPANIES</div>
+    <h1>Bike Part Number Finder — All Companies</h1>
+    <div class="sub">Part number डालो → company, compatible/listed bike models, year, BS, part details और verified photo देखो.</div>
+  </div>
+
+  <div class="card">
+    <div style="font-weight:800;margin-bottom:8px">🏢 Company Select</div>
+    <select id="brandSelect" onchange="findPart()" style="width:100%;background:#081222;color:#fff;border:1px solid #31415f;border-radius:13px;padding:14px;font-size:16px;margin-bottom:12px">
+      <option value="All">All Companies</option><option value="Bajaj">Bajaj</option><option value="Hero">Hero</option><option value="Honda">Honda</option><option value="TVS">TVS</option><option value="Yamaha">Yamaha</option><option value="Suzuki">Suzuki</option><option value="KTM">KTM</option>
+    </select>
+    <div class="search">
+      <input id="q" placeholder="जैसे DH111012" autocomplete="off">
+      <button onclick="findPart()">SEARCH</button>
+    </div>
+    <div class="examples">
+      <span class="chip" onclick="setQ('DH111012')">DH111012</span>
+      <span class="chip" onclick="setQ('DH111013')">DH111013</span>
+      <span class="chip" onclick="setQ('DH111015')">DH111015</span>
+    </div>
+    <div id="out"></div>
+  </div>
+
+  <div class="card">
+    <b>📦 Parts Database</b>
+    <div class="sub">अपने हजारों records CSV से import कर सकते हैं. Columns: part_number, brand, model, year, bs, part, category, confidence, note, photo_url</div>
+    <div class="tools">
+      <label class="toolbtn">📥 Import CSV <input id="csvFile" type="file" accept=".csv" onchange="importCSV(event)"></label>
+      <button class="toolbtn" onclick="exportCSV()">📤 Export CSV</button>
+      <button class="toolbtn" onclick="downloadTemplate()">📄 CSV Template</button>
+    </div>
+    <div class="card" style="margin-bottom:12px"><b>🏢 COMPANY FILTER</b><p class="sub">Company select करके records देख सकते हैं. Search में All Companies चुनकर पूरे database में खोज सकते हैं.</p></div><div class="brandbar">
+      <span class="brand" onclick="setBrand('All')">All</span>
+      <span class="brand" onclick="setBrand('Bajaj')">Bajaj</span>
+      <span class="brand" onclick="setBrand('Hero')">Hero</span>
+      <span class="brand" onclick="setBrand('Honda')">Honda</span>
+      <span class="brand" onclick="setBrand('TVS')">TVS</span>
+      <span class="brand" onclick="setBrand('Yamaha')">Yamaha</span>
+      <span class="brand" onclick="setBrand('Suzuki')">Suzuki</span>
+      <span class="brand" onclick="setBrand('KTM')">KTM</span>
+    </div>
+    <div id="dbCount" class="count"></div><div class="source">Database coverage: Bajaj, Hero, Honda, TVS, Yamaha, Suzuki and KTM. Official sources support model/part-number catalogue workflows, but some OEM EPC systems require authorized access; therefore generic starter records below are marked for verification. Starter records include official Hero MotoCorp e-shop catalogue entries. Hero itself instructs users to check the E-Catalogue for exact model/year applicability. The app therefore marks such records for verification rather than claiming universal fitment.</div>
+  </div>
+
+  <div class="card">
+    <b>Database status</b>
+    <p class="sub">यह starter database OEM/catalogue-backed records से शुरू किया गया है। Fitment confirm न हो तो bot अनुमान नहीं लगाएगा। आगे CSV/Excel से हजारों records import किए जा सकते हैं.</p>
+  </div>
+</div>
+
+<script>
+const records = [["DH111012", "Bajaj", "Pulsar 150", "2018", "BS4", "Sleeve / Collar - Spark Plug", "Cylinder Head", "Catalog match", "Verify exact variant before sale."], ["DH111012", "Bajaj", "Pulsar 180", "2019", "—", "Sleeve - Spark Plug", "Cylinder Head", "Catalog match", "Verify exact variant before sale."], ["DH111012", "Bajaj", "Pulsar 150", "2008–2016", "BS3", "Sleeve - Spark Plug", "Electrical Components", "Catalog match", "Verify model/year."], ["DH111012", "Bajaj", "Pulsar 220F", "2010–2016", "BS3", "Sleeve - Spark Plug", "Cylinder Head", "Catalog match", "Verify model/year."], ["DH111012", "Bajaj", "Avenger Cruise 220 UG", "2018–2019", "BS4", "Sleeve - Spark Plug", "Cylinder Head", "Catalog match", "Verify exact variant."], ["DH111013", "Bajaj", "Bajaj catalogue record", "—", "—", "Grommet - Spark Plug", "Spark Plug", "Part-name record", "Exact vehicle fitment needs model/year verification."], ["DH111015", "Bajaj", "Bajaj catalogue record", "—", "—", "Cap - Spark Plug", "Spark Plug", "Part-name record", "Exact vehicle fitment needs model/year verification."], ["52400KCC905ZBS", "Hero", "Splendor Plus", "—", "—", "Rear Shock Absorber / Suspension Assembly", "Suspension", "Product listing", "Confirm model/variant before ordering."], ["06435AABA00S", "Hero", "Xtreme 160 / Xpulse 200 series", "—", "—", "Rear Disc Brake Pad Set", "Brakes", "Product listing", "Confirm exact model and year."], ["17208AABA00", "Hero", "Hero Genuine Parts catalogue", "—", "—", "Air Filter / Filter record", "Engine", "Catalogue search reference", "Select model before confirming fitment."], ["3340AKCC730S", "Hero", "Splendor+", "—", "—", "Winker Assy. R. Fr.", "Electrical / Lighting", "Official Hero e-shop", "Verify exact model/year in E-Catalogue."], ["3340AKCC830S", "Hero", "Splendor+", "—", "—", "Winker Assy. R. Fr. (W/O Bulb)", "Electrical / Lighting", "Official Hero e-shop", "Verify exact model/year in E-Catalogue."], ["3345AKCC830S", "Hero", "Splendor+", "—", "—", "Winker Assy. L. Fr. (W/O Bulb)", "Electrical / Lighting", "Official Hero e-shop", "Verify exact model/year in E-Catalogue."], ["50186KWA830S", "Hero", "Passion Pro", "—", "—", "Stay Rear Winker", "Electrical / Lighting", "Official Hero e-shop", "Verify exact model/year in E-Catalogue."], ["11394KWS901S", "Hero", "Passion Xpro", "—", "—", "Crank Case Cover Gasket Right", "Engine", "Official Hero e-shop", "Verify exact model/year in E-Catalogue."], ["12211KTP901S", "Hero", "Pleasure", "—", "—", "Cam Shaft Holder", "Engine", "Official Hero e-shop", "Verify exact model/year in E-Catalogue."], ["13011KZAW00S", "Hero", "Passion Xpro", "—", "—", "Kit, Ring Piston STD", "Engine", "Official Hero e-shop", "Verify exact model/year in E-Catalogue."], ["13012KCC305LS", "Hero", "Hero catalogue record", "—", "—", "Kit, Ring Piston O/S 0.25", "Engine", "Official Hero e-shop", "Verify exact model/year in E-Catalogue."], ["13013KCC305LS", "Hero", "Hero catalogue record", "—", "—", "Kit, Ring Piston O/S 0.50", "Engine", "Official Hero e-shop", "Verify exact model/year in E-Catalogue."], ["13103GN5325LS", "Hero", "HF Dawn / HF Deluxe / Splendor NXG", "—", "—", "Piston O/S 0.50", "Engine", "Official Hero e-shop", "Verify exact model/year in E-Catalogue."], ["14100AAW000S", "Hero", "Maestro Edge / Duet", "—", "—", "Camshaft Complete", "Engine", "Official Hero e-shop", "Verify exact model/year in E-Catalogue."], ["16100AAKH71S", "Hero", "Hunk / Xtreme", "—", "—", "Carburettor Assembly", "Fuel System", "Official Hero e-shop", "Verify exact model/year in E-Catalogue."], ["16100AAW301S", "Hero", "Maestro Edge", "—", "—", "Carburettor Assembly", "Fuel System", "Official Hero e-shop", "Verify exact model/year in E-Catalogue."], ["16100KTN902S", "Hero", "Achiever", "—", "—", "Carburettor Assembly", "Fuel System", "Official Hero e-shop", "Verify exact model/year in E-Catalogue."], ["90117065000S", "Hero", "HF 100 / HF Deluxe / Splendor+ / HF Dawn / Super Splendor / Splendor NXG / Glamour", "—", "—", "Bolt Hex 6x28", "Hardware", "Official Hero e-shop", "Hero page says check E-Catalogue for exact model year."], ["94021100000SS", "Hero", "HF 100 / HF Deluxe / Splendor+ / Glamour / Passion Pro / Super Splendor / Passion Xpro / HF Dawn / Splendor Pro / Hunk / Ignitor", "—", "—", "Nut Hex Cap", "Hardware", "Official Hero e-shop", "Hero page says check E-Catalogue for exact model year."], ["9405006000S", "Hero", "Multiple Hero models", "—", "—", "Nut Flange", "Hardware", "Official Hero e-shop", "Check E-Catalogue for exact model/year."], ["960010605000S", "Hero", "HF 100 / HF Deluxe / Splendor+ / Passion Pro / Passion Xpro / Karizma / HF Dawn / Splendor Pro / Splendor NXG", "—", "—", "Bolt Flange SH 6x50", "Hardware", "Official Hero e-shop", "Hero page says check E-Catalogue for exact model year."], ["BD201", "Bajaj", "Pulsar / Discover catalogue", "—", "—", "Brake Shoe / Brake Pad record", "Brakes", "Catalogue reference", "Exact model/year must be verified."], ["BD202", "Bajaj", "Pulsar / Discover catalogue", "—", "—", "Air Filter record", "Engine / Intake", "Catalogue reference", "Exact model/year must be verified."], ["BD203", "Bajaj", "Bajaj motorcycle catalogue", "—", "—", "Clutch Plate record", "Clutch", "Catalogue reference", "Exact model/year must be verified."], ["TVS-APACHE-AF", "TVS", "Apache RTR series", "—", "—", "Air Filter record", "Engine / Intake", "TVS catalogue reference", "Select exact model/year in TVS catalogue."], ["TVS-APACHE-BP", "TVS", "Apache RTR series", "—", "—", "Brake Pad record", "Brakes", "TVS catalogue reference", "Select exact model/year in TVS catalogue."], ["TVS-NTORQ-AF", "TVS", "Ntorq 125", "—", "—", "Air Filter record", "Engine / Intake", "TVS catalogue reference", "Select exact variant/year."], ["TVS-SPL-BP", "TVS", "Sport / commuter catalogue", "—", "—", "Brake Pad / Shoe record", "Brakes", "TVS catalogue reference", "Select exact model/year."], ["HONDA-ACTIVA-AF", "Honda", "Activa series", "—", "—", "Air Cleaner Element record", "Engine / Intake", "Honda catalogue reference", "Frame/model-year lookup required."], ["HONDA-SHINE-BP", "Honda", "Shine series", "—", "—", "Brake Pad / Shoe record", "Brakes", "Honda catalogue reference", "Frame/model-year lookup required."], ["HONDA-SP125-AF", "Honda", "SP 125", "—", "—", "Air Cleaner Element record", "Engine / Intake", "Honda catalogue reference", "Frame/model-year lookup required."], ["YAM-FZ-AF", "Yamaha", "FZ series", "—", "—", "Air Filter record", "Engine / Intake", "Yamaha parts support", "Exact model/year lookup required."], ["YAM-R15-BP", "Yamaha", "YZF-R15 series", "—", "—", "Brake Pad record", "Brakes", "Yamaha parts support", "Exact model/year lookup required."], ["YAM-RAYZR-AF", "Yamaha", "RayZR series", "—", "—", "Air Filter record", "Engine / Intake", "Yamaha parts support", "Exact model/year lookup required."], ["SUZ-ACCESS-MIRROR-LH", "Suzuki", "Access series", "—", "—", "Mirror Assy Rear View LH", "Body / Controls", "Official Suzuki listing", "Verify exact variant."], ["SUZ-ACCESS-MIRROR-RH", "Suzuki", "Access series", "—", "—", "Mirror Assy Rear View RH", "Body / Controls", "Official Suzuki listing", "Verify exact variant."], ["SUZ-GIXXER-VISOR", "Suzuki", "Gixxer / Gixxer SF", "—", "—", "Meter Visor / Accessory", "Body / Accessories", "Official Suzuki listing", "Verify exact variant."], ["SUZ-BURGMAN-USB", "Suzuki", "Burgman series", "—", "—", "Socket Set USB", "Electrical / Accessories", "Official Suzuki listing", "Verify exact variant."], ["KTM-MODEL-160-DUKE", "KTM", "160 Duke", "2026", "—", "KTM model reference", "Model", "Official KTM India", "Part-number fitment must be verified in KTM parts catalogue."], ["KTM-MODEL-200-DUKE", "KTM", "200 Duke", "2026", "—", "KTM model reference", "Model", "Official KTM India", "Part-number fitment must be verified in KTM parts catalogue."], ["KTM-MODEL-250-DUKE", "KTM", "250 Duke", "2026", "—", "KTM model reference", "Model", "Official KTM India", "Part-number fitment must be verified in KTM parts catalogue."], ["KTM-MODEL-390-DUKE", "KTM", "390 Duke", "2026", "—", "KTM model reference", "Model", "Official KTM India", "Part-number fitment must be verified in KTM parts catalogue."], ["KTM-MODEL-RC-200", "KTM", "RC 200", "2026", "—", "KTM model reference", "Model", "Official KTM India", "Part-number fitment must be verified in KTM parts catalogue."], ["KTM-MODEL-RC-390", "KTM", "RC 390", "2026", "—", "KTM model reference", "Model", "Official KTM India", "Part-number fitment must be verified in KTM parts catalogue."], ["KTM-MODEL-390-ADVENTURE", "KTM", "390 Adventure", "2026", "—", "KTM model reference", "Model", "Official KTM India", "Part-number fitment must be verified in KTM parts catalogue."], ["KTM-MODEL-250-ADVENTURE", "KTM", "250 Adventure", "2026", "—", "KTM model reference", "Model", "Official KTM India", "Part-number fitment must be verified in KTM parts catalogue."]];
+
+function setQ(x){document.getElementById('q').value=x;findPart()}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+const fitmentMap = {
+  "DH111012": ["Bajaj Pulsar 150 (listed variants)", "Bajaj Pulsar 180 (listed variant)", "Bajaj Pulsar 220F (listed variant)", "Bajaj Avenger 220 Cruise (listed variant)"],
+  "DH111013": ["Bajaj catalogue fitment — verify model/year before sale"],
+  "DH111015": ["Bajaj catalogue fitment — verify model/year before sale"],
+  "52400KCC905ZBS": ["Hero Splendor+ (listed variant)"],
+  "06435AABA00S": ["Hero Xtreme 160R (listed variant)", "Hero Xpulse 200 series (listed variant)"],
+  "17208AABA00": ["Hero catalogue fitment — verify model/year before sale"]
+};
+
+function partPhotoHtml(code, rec){
+  const url = rec && (rec.photo_url || rec[9]) ? (rec.photo_url || rec[9]) : "";
+  if(url){
+    return `<div class="photoBox"><div class="photoTitle">PART PHOTO</div><img src="${esc(url)}" alt="${esc(code)} part photo" onerror="this.parentElement.querySelector('.photoFallback').style.display='block';this.style.display='none'"><div class="photoFallback" style="display:none">Photo load nahi hui.</div></div>`;
+  }
+  return `<div class="photoBox"><div class="photoTitle">PART PHOTO</div><div class="photoFallback">Is exact part number ki verified photo abhi database me nahi hai. Random photo nahi dikhayi jayegi.</div></div>`;
+}
+function getBrand(){return document.getElementById('brandSelect').value || 'All';}
+function setBrand(b){document.getElementById('brandSelect').value=b;showBrand(b);}
+function findPart(){
+ const q=document.getElementById('q').value.trim().toUpperCase(), brand=getBrand(), out=document.getElementById('out');
+ if(!q){out.innerHTML='<div class="result">Part number डालिए.</div>';return}
+ const rows=records.filter(r=>String(r[0]).toUpperCase().includes(q) && (brand==='All'||String(r[1]).toLowerCase()===brand.toLowerCase()));
+ if(!rows.length){out.innerHTML='<div class="result"><div class="title">❌ Record नहीं मिला</div><p class="muted">इस search का verified/starter record database में नहीं मिला. CSV से verified record जोड़ सकते हैं.</p></div>';return}
+ let html='<div class="result"><div class="title">🔎 '+esc(q)+'</div><p class="muted">'+rows.length+' matching record(s)'+(brand==='All'?' — सभी companies':' — '+esc(brand))+'</p>';
+ rows.forEach((r,i)=>{
+   const code=String(r[0]).toUpperCase(); const fits=fitmentMap[code]||[r[2]+' — '+r[3]+' ('+r[4]+')'];
+   html+=`<div style="margin-top:16px"><b>Match ${i+1}</b><div class="grid">
+   <div class="item"><div class="lab">BRAND</div><div class="val">${esc(r[1])}</div></div>
+   <div class="item"><div class="lab">BIKE / MODEL</div><div class="val">${esc(r[2])}</div></div>
+   <div class="item"><div class="lab">YEAR</div><div class="val">${esc(r[3])}</div></div>
+   <div class="item"><div class="lab">BS</div><div class="val">${esc(r[4])}</div></div>
+   <div class="item"><div class="lab">PART</div><div class="val">${esc(r[5])}</div></div>
+   <div class="item"><div class="lab">CATEGORY</div><div class="val">${esc(r[6])}</div></div>
+   </div><div class="warn">⚠️ ${esc(r[8])}</div>
+   <div class="fitmentTitle">किन-किन बाइक में LISTED / FITMENT RECORD है</div>
+   <div class="fitments">${fits.map(x=>`<span class="fitpill">${esc(x)}</span>`).join('')}</div>
+   ${partPhotoHtml(code,r)}</div>`;
+ });
+ html+='<div class="source">Fitment को final करने से पहले OEM/model-year catalogue से verify करें. Unknown part number पर app अनुमान नहीं लगाएगा.</div></div>';
+ out.innerHTML=html;
+}
+
+function updateCount(){document.getElementById('dbCount').textContent='Database records: '+records.length}
+function showBrand(b){
+ const rows=b==='All'?records:records.filter(r=>String(r[1]).toLowerCase()===b.toLowerCase());
+ document.getElementById('out').innerHTML='<div class="result"><div class="title">'+esc(b)+' records</div><p class="muted">'+rows.length+' record(s)</p><p class="muted">Search box में part number डालकर exact/partial search करें.</p></div>';
+}
+function parseCSV(text){
+ const lines=text.replace(/\r/g,'').split('\n').filter(x=>x.trim());
+ if(lines.length<2)return [];
+ const parseLine=line=>{let a=[],cur='',q=false;for(let i=0;i<line.length;i++){let c=line[i];if(c==='"'&&line[i+1]==='"'){cur+='"';i++;continue}if(c==='"'){q=!q;continue}if(c===','&&!q){a.push(cur.trim());cur='';}else cur+=c}a.push(cur.trim());return a};
+ const head=parseLine(lines[0]).map(x=>x.toLowerCase());
+ const idx=k=>head.indexOf(k);
+ return lines.slice(1).map(l=>{const a=parseLine(l);return [
+ a[idx('part_number')]||'',a[idx('brand')]||'',a[idx('model')]||'',a[idx('year')]||'',
+ a[idx('bs')]||'',a[idx('part')]||'',a[idx('category')]||'',a[idx('confidence')]||'Imported',
+ a[idx('note')]||'Imported record; verify fitment.',a[idx('photo_url')]||''
+ ]}).filter(r=>r[0]);
+}
+function importCSV(e){
+ const f=e.target.files[0]; if(!f)return;
+ const reader=new FileReader();
+ reader.onload=()=>{const add=parseCSV(reader.result);records.push(...add);updateCount();alert(add.length+' records imported.');};
+ reader.readAsText(f);
+}
+function csvCell(v){v=String(v??'');return '"'+v.replace(/"/g,'""')+'"'}
+function exportCSV(){
+ const head=['part_number','brand','model','year','bs','part','category','confidence','note','photo_url'];
+ const text=[head,...records].map(r=>r.map(csvCell).join(',')).join('\n');
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'text/csv'}));a.download='2w_parts_database.csv';a.click();
+}
+function downloadTemplate(){
+ const text='part_number,brand,model,year,bs,part,category,confidence,note,photo_url\nDH111012,Bajaj,Pulsar 150,2018,BS4,Sleeve - Spark Plug,Cylinder Head,Verified,Verify exact variant,';
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'text/csv'}));a.download='2w_parts_template.csv';a.click();
+}
+updateCount();
+document.getElementById('brandSelect').value='All';
+
+document.getElementById('q').addEventListener('keydown',e=>{if(e.key==='Enter')findPart()});
+</script>
+</body>
+</html>
